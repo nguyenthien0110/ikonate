@@ -1,9 +1,35 @@
+"use client";
+
 import { FaBlog, FaGithub } from "react-icons/fa";
 import { IoSearchOutline } from "react-icons/io5";
 import ButtonLink from "./components/ButtonLink";
 import ButtonControll from "./components/ButtonControll";
+import { useEffect, useState } from "react";
+import { TypeFile } from "./type";
+import Item from "./components/Item";
 
 export default function Home() {
+  const [item, setItem] = useState<TypeFile[]>([]);
+
+  useEffect(() => {
+    FetchData();
+  }, []);
+
+  const FetchData = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const result = await response.json();
+      setItem(result.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  console.log(item);
+
   return (
     <>
       <div className="h-screen w-full bg-white">
@@ -28,11 +54,28 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="flex h-full w-full pt-16 justify-center">
-          <div className="h-full w-[20%] border-r border-gray-200 flex justify-center pt-2">
-            <ButtonControll type="number" />
+        <div className="fixed flex h-full w-full pt-16 justify-center">
+          <div className="h-full w-[20%] border-r border-gray-200 flex flex-col items-center pt-2 gap-4 overscroll-auto">
+            <div>
+              <label htmlFor="" className="text-xl">
+                border
+              </label>
+              <ButtonControll type="number" />
+            </div>
+            <div>
+              <label htmlFor="" className="text-xl">
+                size
+              </label>
+              <ButtonControll type="number" />
+            </div>
           </div>
-          <div className="h-full w-[80%]"></div>
+          <div className="bg-blue-100/30 h-full w-[80%] grid grid-cols-12 gap-2 overflow-auto p-6">
+            {item.map((i, index) => (
+              <>
+                <Item key={index} icon={i.context} />
+              </>
+            ))}
+          </div>
         </div>
       </div>
     </>
