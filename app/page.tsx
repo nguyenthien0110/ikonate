@@ -10,6 +10,7 @@ import Item from "./components/Item";
 
 export default function Home() {
   const [item, setItem] = useState<TypeFile[]>([]);
+  const [nameItem, setNameItem] = useState<string>("");
 
   useEffect(() => {
     FetchData();
@@ -70,10 +71,14 @@ export default function Home() {
             </div>
           </div>
           <div className="bg-blue-100/30 h-full w-[80%] grid grid-cols-12 gap-2 overflow-auto p-6">
-            {item.map((i, index) => (
-              <>
-                <Item key={index} icon={i.context} />
-              </>
+            {item.map((i) => (
+              <Item
+                key={i.name}
+                name={i.name}
+                currentName={nameItem}
+                icon={i.context}
+                setNameItem={setNameItem}
+              />
             ))}
           </div>
         </div>
